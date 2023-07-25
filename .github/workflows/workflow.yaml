@@ -1,0 +1,64 @@
+name: push node image to ECR
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v2
+    
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-south-1
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Set up date format variable
+      run: |
+        DATE_FORMAT=$(date +"%d-%m-%y") # Fetch current date in "dd-mm-yy" format
+        echo "DATE_FORMAT=$DATE_FORMAT" >> $GITHUB_ENV
+        echo "Date format variable set to $DATE_FORMAT"
+    - name: Build, tag, and push image to Amazon ECR
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: sag_ecr_1
+        DATE_FORMAT: ${{ env.DATE_FORMAT }} # Fetch the date format from the environment variable
+        IMAGE_TAG: nodejs_demotag_image_${{ github.run_number }}_${{ env.DATE_FORMAT }} # Add build number and date to the image tag
+        IMAGE_NAME: node_api_image_${{ env.DATE_FORMAT }} # Use double curly braces to access the DATE_FORMAT variable
+      run: |
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        echo "Hii Sagar"
+        echo "Repository Name: $ECR_REPOSITORY"
+        echo "Image Name: $IMAGE_NAME"
+        echo "Image Tag: $IMAGE_TAG"
+
+    - name: Retrieve existing task definition
+      id: get_task_definition
+      run: |
+        aws ecs describe-task-definition --task-definition mynodeapp-new > existing_task_definition.json
+
+    - name: Modify task definition
+      id: modify_task_definition
+      run: |
+        # Update the image URL in existing_task_definition.json
+        jq '.taskDefinition.containerDefinitions[0].image = "927689643452.dkr.ecr.ap-south-1.amazonaws.com/sag_ecr_1:nodejs_demotag_image_39_21-07-23"' existing_task_definition.json > modified_task_definition.json
+
+    - name: Register updated task definition
+      id: register_task_definition
+      run: |
+        aws ecs register-task-definition --cli-input-json file://modified_task_definition.json > new_task_definition.json
+
+    - name: Update ECS service
+      run: |
+        aws ecs update-service --cluster sag-ECS-cluster --service sagnewservice --task-definition $(jq -r '.taskDefinition.taskDefinitionArn' new_task_definition.json)

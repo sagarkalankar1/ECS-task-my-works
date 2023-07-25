@@ -51,7 +51,7 @@ jobs:
     - name: Modify task definition
       id: modify_task_definition
       run: |
-        # Update the image URL in existing_task_definition.json
+        # Update the image URL in existing_task_definition.json ok
         jq '.taskDefinition.containerDefinitions[0].image = "927689643452.dkr.ecr.ap-south-1.amazonaws.com/sag_ecr_1:nodejs_demotag_image_39_21-07-23"' existing_task_definition.json > modified_task_definition.json
 
     - name: Register updated task definition

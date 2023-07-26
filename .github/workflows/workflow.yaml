@@ -6,10 +6,9 @@ on:
       - main
 
 env:
-  ECS_SERVICE: sag-ecs-service                # set this to your Amazon ECS service name
-  ECS_CLUSTER: sag-ECS-cluster                # set this to your Amazon ECS cluster name
-  ECS_TASK_DEFINITION: ./task-defination.json # set this to the path to your Amazon ECS task definition
-                                             # file, e.g. .aws/task-definition.json
+  ECS_SERVICE: sag-ecs-service
+  ECS_CLUSTER: sag-ECS-cluster
+  ECS_TASK_DEFINITION: ./task-defination.json
   CONTAINER_NAME: nodeappcontainer
 
 jobs:
@@ -43,7 +42,7 @@ jobs:
         DATE_FORMAT: ${{ env.DATE_FORMAT }} # Fetch the date format from the environment variable
         IMAGE_TAG: nodejs_demotag_image_${{ github.run_number }}_${{ env.DATE_FORMAT }} # Add build number and date to the image tag
         IMAGE_NAME: node_api_image_${{ env.DATE_FORMAT }} # Use double curly braces to access the DATE_FORMAT variable
-        IMAGE: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+        IMAGE: ${{ steps.login-ecr.outputs.IMAGE }} # Use correct variable name 'IMAGE' instead of 'image'
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
@@ -58,7 +57,7 @@ jobs:
       with:
         task-definition: ${{ env.ECS_TASK_DEFINITION }}
         container-name: ${{ env.CONTAINER_NAME }}
-        image: ${{ steps.build-image.outputs.image }}
+        image: ${{ steps.build-image.outputs.IMAGE }} # Use correct variable name 'IMAGE' instead of 'image'
 
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@df9643053eda01f169e64a0e60233aacca83799a

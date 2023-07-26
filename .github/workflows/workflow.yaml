@@ -59,7 +59,7 @@ jobs:
       with:
         task-definition: ${{ env.ECS_TASK_DEFINITION }}
         container-name: ${{ env.CONTAINER_NAME }}
-        image: ${{ steps.build-image.outputs.image }} # Use correct variablee namie 'IMAGE' instead of 'image'
+        image: ${{ steps.build-image.outputs.image }} # Use correct variableee namie 'IMAGE' instead of 'image'
 
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@df9643053eda01f169e64a0e60233aacca83799a
@@ -69,6 +69,6 @@ jobs:
         cluster: ${{ env.ECS_CLUSTER }}
         wait-for-service-stability: true
 
-    - name: Update ECS Service
-        run: | 
-          aws ecs update-service --cluster sag-ECS-cluster --service sag-ecs-service --desired-count 1 --task-definition arn:aws:ecs:ap-south-1:927689643452:task-definition/mynodeapp-new:4 --force-new-deployment       
+    # - name: Update ECS Service
+    #     run: | 
+    #       aws ecs update-service --cluster sag-ECS-cluster --service sag-ecs-service --desired-count 1 --task-definition arn:aws:ecs:ap-south-1:927689643452:task-definition/mynodeapp-new:4 --force-new-deployment       

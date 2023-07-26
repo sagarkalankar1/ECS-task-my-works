@@ -5,6 +5,13 @@ on:
     branches:
       - main
 
+env:             
+  ECS_SERVICE: sag-ecs-service                # set this to your Amazon ECS service name
+  ECS_CLUSTER: sag-ECS-cluster               # set this to your Amazon ECS cluster name
+  ECS_TASK_DEFINITION: ./task-defination.json # set this to the path to your Amazon ECS task definition
+                                               # file, e.g. .aws/task-definition.json
+  CONTAINER_NAME: nodeappcontainer
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -43,23 +50,18 @@ jobs:
         echo "Image Name: $IMAGE_NAME"
         echo "Image Tag: $IMAGE_TAG"
 
-    - name: Retrieve existing task definition
-      id: get_task_definition
-      run: |
-        aws ecs describe-task-definition --task-definition mynodeapp-new > existing_task_definition.json
+    - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@c804dfbdd57f713b6c079302a4c01db7017a36fc
+        with:
+          task-definition: ${{ env.ECS_TASK_DEFINITION }}
+          container-name: ${{ env.CONTAINER_NAME }}
+          image: ${{ steps.build-image.outputs.image }}
 
-    - name: Modify task definition
-      id: modify_task_definition
-      run: |
-      # Update the image URL in existing_task_definition.json
-        jq '.containerDefinitions[0].image = "927689643452.dkr.ecr.ap-south-1.amazonaws.com/sag_ecr_1:nodejs_demotag_image_39_21-07-23"' existing_task_definition.json > modified_task_definition.json
-
-
-    - name: Register updated task definition
-      id: register_task_definition
-      run: |
-        aws ecs register-task-definition --cli-input-json file://modified_task_definition.json > new_task_definition.json
-
-    - name: Update ECS service
-      run: |
-        aws ecs update-service --cluster sag-ECS-cluster --service sagnewservice --task-definition $(jq -r '.taskDefinition.taskDefinitionArn' new_task_definition.json)
+    - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@df9643053eda01f169e64a0e60233aacca83799a
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ env.ECS_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true

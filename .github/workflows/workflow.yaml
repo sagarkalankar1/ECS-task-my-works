@@ -36,6 +36,7 @@ jobs:
         echo "Date format variable set to $DATE_FORMAT"
 
     - name: Build, tag, and push image to Amazon ECR
+      id: build-image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: sag_ecr_1

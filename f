@@ -1,67 +1,25 @@
-name: push node image to ECR
-
-on:
-  push:
-    branches:
-      - main
-
-env:             
-  ECS_SERVICE: sag-ecs-service                # set this to your Amazon ECS service name
-  ECS_CLUSTER: sag-ECS-cluster               # set this to your Amazon ECS cluster name
-  ECS_TASK_DEFINITION: ./task-defination.json # set this to the path to your Amazon ECS task definition
-                                               # file, e.g. .aws/task-definition.json
-  CONTAINER_NAME: nodeappcontainer
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Check out code
-      uses: actions/checkout@v2
-    
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ap-south-1
-
-    - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
-
-    - name: Set up date format variable
-      run: |
-        DATE_FORMAT=$(date +"%d-%m-%y") # Fetch current date in "dd-mm-yy" format
-        echo "DATE_FORMAT=$DATE_FORMAT" >> $GITHUB_ENV
-        echo "Date format variable set to $DATE_FORMAT"
-    - name: Build, tag, and push image to Amazon ECR
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: sag_ecr_1
-        DATE_FORMAT: ${{ env.DATE_FORMAT }} # Fetch the date format from the environment variable
-        IMAGE_TAG: nodejs_demotag_image_${{ github.run_number }}_${{ env.DATE_FORMAT }} # Add build number and date to the image tag
-        IMAGE_NAME: node_api_image_${{ env.DATE_FORMAT }} # Use double curly braces to access the DATE_FORMAT variable
-      run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        echo "Hii Sagar"
-        echo "Repository Name: $ECR_REPOSITORY"
-        echo "Image Name: $IMAGE_NAME"
-        echo "Image Tag: $IMAGE_TAG"
-
-    - name: Fill in the new image ID in the Amazon ECS task definition
-        id: task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@c804dfbdd57f713b6c079302a4c01db7017a36fc
-        with:
-          task-definition: ${{ env.ECS_TASK_DEFINITION }}
-          container-name: ${{ env.CONTAINER_NAME }}
-          image: ${{ steps.build-image.outputs.image }}
-
-    - name: Deploy Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@df9643053eda01f169e64a0e60233aacca83799a
-        with:
-          task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: ${{ env.ECS_SERVICE }}
-          cluster: ${{ env.ECS_CLUSTER }}
-          wait-for-service-stability: true
+{
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "family": "mynodeapp-new",
+    "containerDefinitions": [
+        {
+            "name": "nodeappcontainer",
+            "image": "927689643452.dkr.ecr.ap-south-1.amazonaws.com/sag_ecr_1:nodejs_demotag_image_16_27-07-23",
+            "essential": true,
+            "portMappings": [
+                {
+                    "containerPort": 3000,
+                    "hostPort": 3000,
+                    "protocol": "tcp"
+                }
+            ]
+        }
+    ],
+    "volumes": [],
+    "networkMode": "awsvpc",
+    "memory": "3 GB",
+    "cpu": "1 vCPU",
+    "executionRoleArn": "arn:aws:iam::927689643452:role/ecsTaskExecutionRole"
+}

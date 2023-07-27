@@ -69,7 +69,6 @@ jobs:
         cluster: ${{ env.ECS_CLUSTER }}
         wait-for-service-stability: true
 
-    - name: Update ECS Service Count
-      run: |
-        aws ecs update-service --cluster sag-ECS-cluster --service sag-ecs-service --desired-count 2
-    
+    - name: Update ECS Service
+      run: | 
+        aws ecs update-service --cluster sag-ECS-cluster --service sag-ecs-service --desired-count 3 --task-definition arn:aws:ecs:ap-south-1:927689643452:task-definition/mynodeapp-new:11 --force-new-deployment       

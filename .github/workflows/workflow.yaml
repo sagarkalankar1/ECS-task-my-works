@@ -71,4 +71,4 @@ jobs:
 
     - name: Update ECS Service
       run: | 
-        aws ecs update-service --cluster sag-ECS-cluster --service sag-ecs-service --desired-count 2 --task-definition arn:aws:ecs:ap-south-1:927689643452:task-definition/mynodeapp-new:4 --force-new-deployment       
+        aws ecs update-service --cluster sag-ECS-cluster --service sag-ecs-service --desired-count 1 --task-definition arn:aws:ecs:ap-south-1:927689643452:task-definition/mynodeapp-new:10 --force-new-deployment       

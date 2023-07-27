@@ -71,5 +71,5 @@ jobs:
 
     - name: Update ECS Service Count
       run: |
-        aws ecs update-service --cluster sag-ECS-cluster --service sag-ecs-service --desired-count 1
+        aws ecs update-service --cluster sag-ECS-cluster --service sag-ecs-service --desired-count 2
     

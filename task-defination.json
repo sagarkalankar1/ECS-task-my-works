@@ -6,7 +6,7 @@
     "containerDefinitions": [
         {
             "name": "nodeappcontainer",
-            "image": "927689643452.dkr.ecr.ap-south-1.amazonaws.com/sag_ecr_1:nodejs_demotag_image_39_21-07-23",
+            "image": "927689643452.dkr.ecr.ap-south-1.amazonaws.com/sag_ecr_1:nodejs_demotag_image_16_27-07-23",
             "essential": true,
             "portMappings": [
                 {

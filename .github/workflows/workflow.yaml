@@ -9,7 +9,7 @@ env:
   ECS_SERVICE: sag-ecs-service
   ECS_CLUSTER: sag-ECS-cluster
   ECS_TASK_DEFINITION: ./task-defination.json
-  CONTAINER_NAME: nodeappcontainer
+  CONTAINER_NAME: newcontainer
 
 jobs:
   deploy:

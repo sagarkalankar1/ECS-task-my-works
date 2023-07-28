@@ -82,10 +82,13 @@ jobs:
               "value": "${{ env.DB_PASSWORD }}"
             }
           ]
+
+    - name: Print DB_PASSWORD environment variable
       run: |
         echo "DB_PASSWORD environment variable:"
         echo "Name: DB_PASSWORD"
-        echo "Value: $DB_PASSWORD"    
+        echo "Value: ${{ env.DB_PASSWORD }}"
+    
 
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@df9643053eda01f169e64a0e60233aacca83799a

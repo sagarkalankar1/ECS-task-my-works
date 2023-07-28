@@ -43,7 +43,7 @@ jobs:
         DATE_FORMAT: ${{ env.DATE_FORMAT }} # Fetch the date format from the environment variable
         IMAGE_TAG: nodejs_demotag_image_${{ github.run_number }}_${{ env.DATE_FORMAT }} # Add build number and date to the image tag
         IMAGE_NAME: node_api_image_${{ env.DATE_FORMAT }} # Use double curly braces to access the DATE_FORMAT variable
-        # IMAGE: ${{ steps.login-ecr.outputs.IMAGE }} # Use correct variable name 'IMAGE' inostead of 'image'
+        # IMAGE: ${{ steps.login-ecr.outputs.IMAGE }} # Use correctt variable name 'IMAGE' inostead of 'image'
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG

@@ -62,7 +62,7 @@ jobs:
         
     - name: Get Secrets from AWS SSM Parameter Store
       run: |
-        DB_PASSWORD=$(aws ssm get-parameters --names arn:aws:ssm:ap-south-1:927689643452:root/my-app/DB_PASSWORD --with-decryption --region ${{ env.AWS_REGION }} --query "Parameters[0].Value" --output text)
+        DB_PASSWORD=$(aws ssm get-parameters --names /my-app/DB_PASSWORD --region ap-south-1 --with-decryption --query "Parameters[0].Value" --output text)
         echo "DB_PASSWORD=$DB_PASSWORD" >> $GITHUB_ENV
       env:
         AWS_REGION: ${{ env.AWS_REGION }}

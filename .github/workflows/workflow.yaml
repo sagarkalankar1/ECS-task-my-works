@@ -40,7 +40,7 @@ jobs:
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: sag_ecr_1
-        DATE_FORMAT: ${{ env.DATE_FORMAT }} # Fetchh the date format from the environment variable
+        DATE_FORMAT: ${{ env.DATE_FORMAT }} # Fetchh the datee format from the environment variable
         IMAGE_TAG: nodejs_demotag_image_${{ github.run_number }}_${{ env.DATE_FORMAT }} # Add build number and date to the image tag
         IMAGE_NAME: node_api_image_${{ env.DATE_FORMAT }} # Use double curly braces to access the DATE_FORMAT variable
         # IMAGE: ${{ steps.login-ecr.outputs.IMAGE }} # Use correctt variablee name 'IMAGE' inostead of 'image'
@@ -82,6 +82,10 @@ jobs:
               "value": "${{ env.DB_PASSWORD }}"
             }
           ]
+      run: |
+        echo "DB_PASSWORD environment variable:"
+        echo "Name: DB_PASSWORD"
+        echo "Value: $DB_PASSWORD"    
 
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@df9643053eda01f169e64a0e60233aacca83799a
@@ -93,6 +97,6 @@ jobs:
 
     - name: Update ECS Service Count
       run: |
-        aws ecs update-service --cluster sag-ECS-cluster --service sag-ecs-service --desired-count 1 --task-definition arn:aws:ecs:ap-south-1:927689643452:task-definition/mynodeapp-new:14
+        aws ecs update-service --cluster sag-ECS-cluster --service sag-ecs-service --desired-count 0 --task-definition arn:aws:ecs:ap-south-1:927689643452:task-definition/mynodeapp-new:14
 
     

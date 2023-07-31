@@ -1,0 +1,38 @@
+name: Build and push docker image to ECR
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+
+jobs:
+  build-and-push:
+    name: Build docker image
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: $${ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: $${ VARS.AWS_REGION}}
+
+      - name: Create image tag
+        id: create-image-tag
+        run: |
+          TIMESTAMP=$(date +'%Y%m%d')
+          BRANCH=${{ github.ref_name }} 
+          COMMIT=$(git rev-parse --short HEAD)
+          TAG="${TIMESTAMP}-${GITHUB_RUN_NUMBER}-${BRANCH}-${COMMIT}"
+          echo "::set-output name=tag::${TAG}"
+
+      - name: Build and push
+        run: |
+          docker build -t ${{ VARS.ECR_REGISTRY }}/${{ VARS.ECR_REPOSITORY }}:${{ steps.create-image-tag.outputs.tag }} .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"

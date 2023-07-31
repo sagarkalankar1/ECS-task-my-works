@@ -1,0 +1,80 @@
+name: push node image to ECR
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  ECS_SERVICE: sag-ecs-service
+  ECS_CLUSTER: sag-ECS-cluster
+  ECS_TASK_DEFINITION: ./task-defination.json
+  CONTAINER_NAME: nodeappcontainer
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v2
+    
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-south-1
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1    
+
+    - name: Install AWS CLI
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y python3-pip
+        pip3 install --upgrade --user awscli
+        echo "export PATH=~/.local/bin:$PATH" >> $GITHUB_ENV  
+        
+    - name: Get Secrets from AWS SSM Parameter Store
+      run: |
+        DB_PASSWORD=$(aws ssm get-parameters --names /my-app/DB_PASSWORD --region ap-south-1 --with-decryption --query "Parameters[0].Value" --output text)
+        echo "DB_PASSWORD=$DB_PASSWORD" >> $GITHUB_ENV
+      env:
+        AWS_REGION: ${{ env.AWS_REGION }}    
+
+    - name: Fill in the new image ID in the Amazon ECS task definition
+      id: task-def
+      uses: aws-actions/amazon-ecs-render-task-definition@c804dfbdd57f713b6c079302a4c01db7017a36fc
+      with:
+        task-definition: ${{ env.ECS_TASK_DEFINITION }}
+        container-name: ${{ env.CONTAINER_NAME }}
+        image: ${{ steps.build-image.outputs.image }} 
+        environment: |
+          [
+            {
+              "name": "DB_PASSWORD",
+              "value": "${{ env.DB_PASSWORD }}"
+            }
+          ]
+
+    - name: Print DB_PASSWORD environment variable
+      run: |
+        echo "DB_PASSWORD environment variable:"
+        echo "Name: DB_PASSWORD"
+        echo "Value: ${{ env.DB_PASSWORD }}"
+    
+
+    - name: Deploy Amazon ECS task definition
+      uses: aws-actions/amazon-ecs-deploy-task-definition@df9643053eda01f169e64a0e60233aacca83799a
+      with:
+        task-definition: ${{ steps.task-def.outputs.task-definition }}
+        service: ${{ env.ECS_SERVICE }}
+        cluster: ${{ env.ECS_CLUSTER }}
+        wait-for-service-stability: true
+
+    - name: Update ECS Service Count
+      run: |
+        aws ecs update-service --cluster sag-ECS-cluster --service sag-ecs-service --desired-count 0 --task-definition arn:aws:ecs:ap-south-1:927689643452:task-definition/mynodeapp-new:15
+
+    

@@ -40,7 +40,7 @@ jobs:
       with:
         task-definition: ${{ VARS.ECS_TASK_DEFINITION }}
         container-name: ${{ VARS.CONTAINER_NAME }}
-        image: ${{ secrets.ECR_IMAGE_URI }}
+        # image: ${{ secrets.ECR_IMAGE_URI }}
         image: ${{ secrets.ECR_IMAGE_URI }}:${{ inputs.image-tag }}
  
     - name: Deploy Amazon ECS task definition

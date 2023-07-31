@@ -3,6 +3,10 @@ name: push node image to ECS
 on:
   workflow_dispatch:
     inputs:
+      name:
+        description: 'Image tag to use'
+        default: 'Image tag'
+        required: true
       environment:
         required: true
         type: string

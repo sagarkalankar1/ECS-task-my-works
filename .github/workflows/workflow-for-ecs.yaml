@@ -1,19 +1,47 @@
 name: push node image to ECS
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
+    inputs:
+      environment:
+        required: true
+        type: string
 
-env:
-  ECS_SERVICE: sag-ecs-service
-  ECS_CLUSTER: sag-ECS-cluster
-  ECS_TASK_DEFINITION: ./task-defination.json
-  CONTAINER_NAME: nodeappcontainer
+permissions:
+  id-token: write
+  contents: read
+
+# jobs:
+#   build-and-push:
+#     name: Build docker image
+#     runs-on: ubuntu-latest
+#     environment: ${{ inputs.environment }}
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v3
+
+#       - name: Configure AWS Credentials
+#         uses: aws-actions/configure-aws-credentials@v2
+#         with:
+#           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+#           aws-region: ${{ VARS.AWS_REGION }}
+# name: push node image to ECS
+
+# on:
+#   push:
+#     branches:
+#       - main
+
+# env:
+#   ECS_SERVICE: sag-ecs-service
+#   ECS_CLUSTER: sag-ECS-cluster
+#   ECS_TASK_DEFINITION: ./task-defination.json
+#   CONTAINER_NAME: nodeappcontainer
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
     steps:
     - name: Check out code
       uses: actions/checkout@v2

@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       name:
-        description: 'Image tag to use'
+        description: 'Image-tag'  #nodejs_demotag_image_56_31-07-23
         default: 'Image tag'
         required: true
       environment:
@@ -41,6 +41,7 @@ jobs:
         task-definition: ${{ VARS.ECS_TASK_DEFINITION }}
         container-name: ${{ VARS.CONTAINER_NAME }}
         image: ${{ secrets.ECR_IMAGE_URI }}
+        image: ${{ secrets.ECR_IMAGE_URI }}:${{ inputs.image-tag }}
  
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@df9643053eda01f169e64a0e60233aacca83799a

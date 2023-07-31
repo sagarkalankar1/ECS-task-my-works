@@ -5,7 +5,7 @@ on:
     inputs:
       name:
         description: 'Image-tag'  #nodejs_demotag_image_56_31-07-23
-        default: 'Image tag'
+        default: 'nodejs_demotag_image_56_31-07-23'
         required: true
       environment:
         required: true
@@ -28,7 +28,7 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ap-south-1
+        aws-region: ${{ VARS.AWS_REGION }}
 
     - name: Login to Amazon ECR
       id: login-ecr
@@ -51,9 +51,10 @@ jobs:
         cluster: ${{ VARS.ECS_CLUSTER }}
         wait-for-service-stability: true
 
-    - name: Update ECS Service Count
+    - name: Update ECS Service
       run: |
         aws ecs update-service --cluster ${{ VARS.ECS_CLUSTER }} --service ${{ VARS.ECS_SERVICE }} --desired-count 0 --task-definition arn:aws:ecs:ap-south-1:927689643452:task-definition/mynodeapp-new:15
 
-# okkkk aws ecs update-service --cluster ${{ VARS.ECS_CLUSTER }} --service ${{ VARS.ECS_SERVICE }} --desired-count 0 --task-definition arn:aws:ecs:ap-south-1:927689643452:task-definition/mynodeapp-new:15
+#  aws ecs update-service --cluster ${{ VARS.ECS_CLUSTER }} --service ${{ VARS.ECS_SERVICE }} --desired-count 0 --task-definition arn:aws:ecs:ap-south-1:927689643452:task-definition/mynodeapp-new:15
 #  aws ecs update-service --cluster sag-ECS-cluster --service sag-ecs-service --desired-count 0 --task-definition arn:aws:ecs:ap-south-1:927689643452:task-definition/mynodeapp-new:15
+# ok

@@ -1,51 +1,51 @@
-# name: Build and push docker image to ECR
+name: Build and push docker image to ECR
 
-# on:
-#   workflow_dispatch:
-#     inputs:
-#       environment:
-#         required: true
-#         type: string
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        required: true
+        type: string
 
-# permissions:
-#   id-token: write
-#   contents: read
+permissions:
+  id-token: write
+  contents: read
 
-# jobs:
-#   build-and-push:
-#     name: Build docker image
-#     runs-on: ubuntu-latest
-#     environment: ${{ inputs.environment }}
-#     steps:
-#       - name: Checkout
-#         uses: actions/checkout@v3
+jobs:
+  build-and-push:
+    # name: Build docker image
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
 
-#       - name: Configure AWS Credentials
-#         uses: aws-actions/configure-aws-credentials@v2
-#         with:
-#           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
-#           aws-region: ${{ VARS.AWS_REGION }}
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ VARS.AWS_REGION }}
 
-#       - name: Login to Amazon ECR
-#         id: login-ecr
-#         uses: aws-actions/amazon-ecr-login@v1
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
 
-#       - name: Create image tag
-#         id: create-image-tag
-#         run: |
-#           TIMESTAMP=$(date +'%Y%m%d')
-#           BRANCH=${{ github.ref_name }} 
-#           COMMIT=$(git rev-parse --short HEAD)
-#           TAG="${TIMESTAMP}-${GITHUB_RUN_NUMBER}-${BRANCH}-${COMMIT}"
-#           echo "::set-output name=tag::${TAG}"
+      - name: Create image tag
+        id: create-image-tag
+        run: |
+          TIMESTAMP=$(date +'%Y%m%d')
+          BRANCH=${{ github.ref_name }} 
+          COMMIT=$(git rev-parse --short HEAD)
+          TAG="${TIMESTAMP}-${GITHUB_RUN_NUMBER}-${BRANCH}-${COMMIT}"
+          echo "::set-output name=tag::${TAG}"
 
-#       - name: Build and push
-#         # run: |
-#         #   docker build -t ${{ steps.login-ecr.outputs.registry }}/${{ VARS.ECR_REPOSITORY }}:${{ steps.create-image-tag.outputs.tag }} .
-#         #   docker push ${{ steps.login-ecr.outputs.registry }}/$ECR_REPOSITORY:${{ steps.create-image-tag.outputs.tag }}
-#         #   echo "image=${{ steps.login-ecr.outputs.registry }}/$ECR_REPOSITORY:${{ steps.create-image-tag.outputs.tag }}"
-#         run: |
-#           docker build -t ${{ steps.login-ecr.outputs.registry }}/${{ VARS.ECR_REPOSITORY }}:${{ steps.create-image-tag.outputs.tag }} .
-#           docker push ${{ steps.login-ecr.outputs.registry }}/${{ VARS.ECR_REPOSITORY }}:${{ steps.create-image-tag.outputs.tag }}
-#           echo "image=${{ steps.login-ecr.outputs.registry }}/${{ VARS.ECR_REPOSITORY }}:${{ steps.create-image-tag.outputs.tag }}"  
+      - name: Build and push
+        # run: |
+        #   docker build -t ${{ steps.login-ecr.outputs.registry }}/${{ VARS.ECR_REPOSITORY }}:${{ steps.create-image-tag.outputs.tag }} .
+        #   docker push ${{ steps.login-ecr.outputs.registry }}/$ECR_REPOSITORY:${{ steps.create-image-tag.outputs.tag }}
+        #   echo "image=${{ steps.login-ecr.outputs.registry }}/$ECR_REPOSITORY:${{ steps.create-image-tag.outputs.tag }}"
+        run: |
+          docker build -t ${{ steps.login-ecr.outputs.registry }}/${{ VARS.ECR_REPOSITORY }}:${{ steps.create-image-tag.outputs.tag }} .
+          docker push ${{ steps.login-ecr.outputs.registry }}/${{ VARS.ECR_REPOSITORY }}:${{ steps.create-image-tag.outputs.tag }}
+          echo "image=${{ steps.login-ecr.outputs.registry }}/${{ VARS.ECR_REPOSITORY }}:${{ steps.create-image-tag.outputs.tag }}"  
           

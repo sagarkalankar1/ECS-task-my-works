@@ -1,4 +1,4 @@
-name: push node image to ECR
+name: push node image to ECS
 
 on:
   push:

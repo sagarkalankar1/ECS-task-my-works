@@ -20,7 +20,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: $${ secrets.AWS_ROLE_TO_ASSUME }}
-          aws-region: $${ VARS.AWS_REGION}}
+          aws-region: $${ env.AWS_REGION}}
 
       - name: Create image tag
         id: create-image-tag
@@ -33,6 +33,6 @@ jobs:
 
       - name: Build and push
         run: |
-          docker build -t ${{ steps.login-ecr.outputs.registry }}/${{ VARS.ECR_REPOSITORY }}:${{ steps.create-image-tag.outputs.tag }} .
+          docker build -t ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ steps.create-image-tag.outputs.tag }} .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"

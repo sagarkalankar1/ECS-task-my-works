@@ -29,19 +29,19 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1    
 
-    - name: Install AWS CLI
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y python3-pip
-        pip3 install --upgrade --user awscli
-        echo "export PATH=~/.local/bin:$PATH" >> $GITHUB_ENV  
+    # - name: Install AWS CLI
+    #   run: |
+    #     sudo apt-get update
+    #     sudo apt-get install -y python3-pip
+    #     pip3 install --upgrade --user awscli
+    #     echo "export PATH=~/.local/bin:$PATH" >> $GITHUB_ENV  
         
-    - name: Get Secrets from AWS SSM Parameter Store
-      run: |
-        DB_PASSWORD=$(aws ssm get-parameters --names /my-app/DB_PASSWORD --region ap-south-1 --with-decryption --query "Parameters[0].Value" --output text)
-        echo "DB_PASSWORD=$DB_PASSWORD" >> $GITHUB_ENV
-      env:
-        AWS_REGION: ${{ env.AWS_REGION }}    
+    # - name: Get Secrets from AWS SSM Parameter Store
+    #   run: |
+    #     DB_PASSWORD=$(aws ssm get-parameters --names /my-app/DB_PASSWORD --region ap-south-1 --with-decryption --query "Parameters[0].Value" --output text)
+    #     echo "DB_PASSWORD=$DB_PASSWORD" >> $GITHUB_ENV
+    #   env:
+    #     AWS_REGION: ${{ env.AWS_REGION }}    
 
     - name: Fill in the new image ID in the Amazon ECS task definition
       id: task-def
@@ -50,19 +50,19 @@ jobs:
         task-definition: ${{ env.ECS_TASK_DEFINITION }}
         container-name: ${{ env.CONTAINER_NAME }}
         image: ${{ steps.build-image.outputs.image }} 
-        environment: |
-          [
-            {
-              "name": "DB_PASSWORD",
-              "value": "${{ env.DB_PASSWORD }}"
-            }
-          ]
+        # environment: |
+        #   [
+        #     {
+        #       "name": "DB_PASSWORD",
+        #       "value": "${{ env.DB_PASSWORD }}"
+        #     }
+        #   ]
 
-    - name: Print DB_PASSWORD environment variable
-      run: |
-        echo "DB_PASSWORD environment variable:"
-        echo "Name: DB_PASSWORD"
-        echo "Value: ${{ env.DB_PASSWORD }}"
+    # - name: Print DB_PASSWORD environment variable
+    #   run: |
+    #     echo "DB_PASSWORD environment variable:"
+    #     echo "Name: DB_PASSWORD"
+    #     echo "Value: ${{ env.DB_PASSWORD }}"
     
 
     - name: Deploy Amazon ECS task definition

@@ -40,7 +40,7 @@ jobs:
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: sag_ecr_1
-        DATE_FORMAT: ${{ env.DATE_FORMAT }} # Fetchh the datee format from the environment variable
+        DATE_FORMAT: ${{ env.DATE_FORMAT }} # Fetchh the date format from the environment variable
         IMAGE_TAG: nodejs_demotag_image_${{ github.run_number }}_${{ env.DATE_FORMAT }} # Add build number and date to the image tag
         IMAGE_NAME: node_api_image_${{ env.DATE_FORMAT }} # Use double curly braces to access the DATE_FORMAT variable
         # IMAGE: ${{ steps.login-ecr.outputs.IMAGE }} # Use correctt variablee name 'IMAGE' inostead of 'image'

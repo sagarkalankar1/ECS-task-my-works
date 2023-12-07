@@ -25,6 +25,7 @@ steps:
 
         # Print the overridden path to the tools directory
         echo "Overridden Agent Tools Directory: $AGENT_TOOLSDIRECTORY"
+        echo "Agent Tools Directory: $(Agent.ToolsDirectory)"
         
         # Additional commands
         echo 'Hello world1'      

@@ -15,6 +15,19 @@ steps:
       script: |
         # Print the path to the tools directory
         echo "Agent Tools Directory: $(Agent.ToolsDirectory)"
+
+  - task: Bash@3
+    inputs:
+      targetType: 'inline'
+      script: |
+        # Override the tools directory with a custom path
+        export AGENT_TOOLSDIRECTORY=/path/to/custom/tools
+
+        # Print the overridden path to the tools directory
+        echo "Overridden Agent Tools Directory: $AGENT_TOOLSDIRECTORY"
+        
+        # Additional commands
+        echo 'Hello world1'      
   
   - task: Bash@3
     inputs:
@@ -22,4 +35,4 @@ steps:
       script: |
         # Write your commands here
         
-        echo 'Hello world1'
+        echo 'Hello world2'

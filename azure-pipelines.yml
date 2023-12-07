@@ -69,3 +69,25 @@ steps:
 
         # List the contents of the directory
         ls      
+
+  - task: Bash@3
+    displayName: 'Step 7: Navigate to /opt and do ls'
+    inputs:
+      targetType: 'inline'
+      script: |
+        # Navigate to the specified path
+        cd /opt
+
+        # List the contents of the directory
+        ls  
+
+  - task: Bash@3
+    displayName: 'Step 8: Navigate to /opt/mysharepipeline and do ls'
+    inputs:
+      targetType: 'inline'
+      script: |
+        # Navigate to the specified path
+        cd /opt/mysharepipeline
+
+        # List the contents of the directory
+        ls        

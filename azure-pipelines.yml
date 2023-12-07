@@ -28,6 +28,13 @@ steps:
         
         # Additional commands
         echo 'Hello world1'      
+
+  - task: Bash@3
+    inputs:
+      targetType: 'inline'
+      script: |
+        # Print the path to the tools directory
+        echo "Agent Tools Directory1: $(Agent.ToolsDirectory)"      
   
   - task: Bash@3
     inputs:

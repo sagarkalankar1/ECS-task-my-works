@@ -44,9 +44,12 @@ steps:
         pwd
   
   - task: Bash@3
-    displayName: 'Step 4: Execute Additional Commands'
+    displayName: 'Step 4: Navigate to /home/sagarkalankar/_work/_tool and do ls'
     inputs:
       targetType: 'inline'
       script: |
-        # Write your commands here
-        echo 'Hello world2'
+        # Navigate to the specified path
+        cd /home/sagarkalankar/_work/_tool
+
+        # List the contents of the directory
+        ls

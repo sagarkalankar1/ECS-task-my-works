@@ -94,4 +94,15 @@ steps:
         cd /opt/mysharepipeline
 
         # List the contents of the directory
-        ls        
+        ls    
+
+  - task: Bash@3
+    displayName: 'Step 9: Navigate to $(Agent.ToolsDirectory)/mysharepipeline and do ls'
+    inputs:
+      targetType: 'inline'
+      script: |
+        # Navigate to the specified path
+        cd $(Agent.ToolsDirectory)/mysharepipeline
+
+        # List the contents of the directory
+        ls            

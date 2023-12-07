@@ -10,6 +10,7 @@ pool: Default
 
 steps:
   - task: Bash@3
+    displayName: 'Step 1: Print Tools Directory'
     inputs:
       targetType: 'inline'
       script: |
@@ -17,6 +18,7 @@ steps:
         echo "Agent.ToolsDirectory: $(Agent.ToolsDirectory)"
 
   - task: Bash@3
+    displayName: 'Step 2: Override Tools Directory'
     inputs:
       targetType: 'inline'
       script: |
@@ -31,6 +33,7 @@ steps:
         echo 'Hello world1'      
 
   - task: Bash@3
+    displayName: 'Step 3: Print Tools Directory Again'
     inputs:
       targetType: 'inline'
       script: |
@@ -41,9 +44,9 @@ steps:
         pwd
   
   - task: Bash@3
+    displayName: 'Step 4: Execute Additional Commands'
     inputs:
       targetType: 'inline'
       script: |
         # Write your commands here
-        
         echo 'Hello world2'

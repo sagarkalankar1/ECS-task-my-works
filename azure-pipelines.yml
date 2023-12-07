@@ -34,7 +34,8 @@ steps:
       targetType: 'inline'
       script: |
         # Print the path to the tools directory
-        echo "Agent Tools Directory1: $(Agent.ToolsDirectory)"      
+        echo "Agent Tools Directory1: $(Agent.ToolsDirectory)"  
+        echo "Overridden Agent Tools Directory: $AGENT_TOOLSDIRECTORY"    
   
   - task: Bash@3
     inputs:

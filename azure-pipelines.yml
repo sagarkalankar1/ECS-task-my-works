@@ -14,7 +14,7 @@ steps:
       targetType: 'inline'
       script: |
         # Print the path to the tools directory
-        echo "Agent Tools Directory: $(Agent.ToolsDirectory)"
+        echo "Agent.ToolsDirectory: $(Agent.ToolsDirectory)"
 
   - task: Bash@3
     inputs:
@@ -24,8 +24,8 @@ steps:
         export AGENT_TOOLSDIRECTORY=/opt/mysharepipeline
 
         # Print the overridden path to the tools directory
-        echo "Overridden Agent Tools Directory: $AGENT_TOOLSDIRECTORY"
-        echo "Agent Tools Directory: $(Agent.ToolsDirectory)"
+        echo "Overridden Agent Tools Directory AGENT_TOOLSDIRECTORY: $AGENT_TOOLSDIRECTORY"
+        echo "Agent Tools Directory Agent.ToolsDirectory: $(Agent.ToolsDirectory)"
         
         # Additional commands
         echo 'Hello world1'      
@@ -35,9 +35,10 @@ steps:
       targetType: 'inline'
       script: |
         # Print the path to the tools directory
-        echo "Agent Tools Directory1: $(Agent.ToolsDirectory)"  
-        echo "Overridden Agent Tools Directory: $AGENT_TOOLSDIRECTORY"  
-        ls  
+        echo "Agent Tools Directory1 Agent.ToolsDirectory: $(Agent.ToolsDirectory)"  
+        echo "Overridden Agent Tools Directory AGENT_TOOLSDIRECTORY: $AGENT_TOOLSDIRECTORY"  
+        ls
+        pwd
   
   - task: Bash@3
     inputs:

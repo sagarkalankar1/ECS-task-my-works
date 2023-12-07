@@ -13,9 +13,8 @@ steps:
     inputs:
       targetType: 'inline'
       script: |
-        # Write your commands here
-        
-        echo 'Hello world'
+        # Print the path to the tools directory
+        echo "Agent Tools Directory: $(Agent.ToolsDirectory)"
   
   - task: Bash@3
     inputs:

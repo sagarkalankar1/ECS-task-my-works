@@ -35,7 +35,8 @@ steps:
       script: |
         # Print the path to the tools directory
         echo "Agent Tools Directory1: $(Agent.ToolsDirectory)"  
-        echo "Overridden Agent Tools Directory: $AGENT_TOOLSDIRECTORY"    
+        echo "Overridden Agent Tools Directory: $AGENT_TOOLSDIRECTORY"  
+        ls  
   
   - task: Bash@3
     inputs:

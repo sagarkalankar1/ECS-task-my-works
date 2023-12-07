@@ -27,7 +27,7 @@ steps:
       targetType: 'inline'
       script: |
         # Override the tools directory with a custom path
-        export AGENT_TOOLSDIRECTORY=/opt/mysharepipeline
+        export AGENT_TOOLSDIRECTORY=$(Agent.ToolsDirectory)/mysharepipeline
 
         # Print the overridden path to the tools directory
         echo "Overridden Agent Tools Directory AGENT_TOOLSDIRECTORY: $AGENT_TOOLSDIRECTORY"

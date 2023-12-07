@@ -53,3 +53,19 @@ steps:
 
         # List the contents of the directory
         ls
+        
+  - task: NodeTool@0
+    displayName: 'Step 5: Install Node.js'
+    inputs:
+      versionSpec: '14.x'
+      
+  - task: Bash@3
+    displayName: 'Step 6: Navigate to /home/sagarkalankar/_work/_tool and do ls'
+    inputs:
+      targetType: 'inline'
+      script: |
+        # Navigate to the specified path
+        cd /home/sagarkalankar/_work/_tool
+
+        # List the contents of the directory
+        ls      

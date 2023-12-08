@@ -18,8 +18,8 @@ steps:
         echo "Agent.ToolsDirectory: $(Agent.ToolsDirectory)"
 
         # Create the /opt/mysharepipeline directory
-        # mkdir -p /opt/mysharepipeline
-        mkdir -p $(Agent.ToolsDirectory)/mysharepipeline
+        mkdir -p /mnt
+        # mkdir -p $(Agent.ToolsDirectory)/mysharepipeline
 
   - task: Bash@3
     displayName: 'Step 2: Override Tools Directory'

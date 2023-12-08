@@ -18,7 +18,7 @@ steps:
         echo "Agent.ToolsDirectory: $(Agent.ToolsDirectory)"
 
         # Create the /opt/mysharepipeline directory
-        mkdir -p /mntsag
+        mkdir -p /home/sagarkalankar/mntsag
         # mkdir -p $(Agent.ToolsDirectory)/mysharepipeline
 
   - task: Bash@3
@@ -27,7 +27,7 @@ steps:
       targetType: 'inline'
       script: |
         # Override the tools directory with a custom path
-        export AGENT_TOOLSDIRECTORY=/mntsag
+        export AGENT_TOOLSDIRECTORY=/home/sagarkalankar/mntsag
 
         # Print the overridden path to the tools directory
         echo "Overridden Agent Tools Directory AGENT_TOOLSDIRECTORY: $AGENT_TOOLSDIRECTORY"
@@ -75,12 +75,12 @@ steps:
         ls      
 
   - task: Bash@3
-    displayName: 'Step 7: Navigate to /mntsag and do ls'
+    displayName: 'Step 7: Navigate to /home/sagarkalankar/mntsag and do ls'
     inputs:
       targetType: 'inline'
       script: |
         # Navigate to the specified path
-        cd /mntsag
+        cd /home/sagarkalankar/mntsag
 
         # List the contents of the directory
         ls  
@@ -98,23 +98,14 @@ steps:
         ls    
 
   - task: Bash@3
-    displayName: 'Step 9: Navigate to /mntsag and do ls'
+    displayName: 'Step 9: Navigate to /home/sagarkalankar/mntsag and do ls'
     inputs:
       targetType: 'inline'
       script: |
         # Navigate to the specified path
-        cd /mntsag
+        cd /home/sagarkalankar/mntsag
 
         # List the contents of the directory
         ls            
 
-  - task: Bash@3
-    displayName: 'Step 10: Navigate to /home/sagarkalankar/_work/1 and do ls'
-    inputs:
-      targetType: 'inline'
-      script: |
-        # Navigate to the specified path
-        cd /home/sagarkalankar/_work/1
 
-        # List the contents of the directory
-        ls

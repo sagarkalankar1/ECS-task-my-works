@@ -106,3 +106,14 @@ steps:
 
         # List the contents of the directory
         ls            
+
+  - task: Bash@3
+    displayName: 'Step 10: Navigate to /home/sagarkalankar/_work/1 and do ls'
+    inputs:
+      targetType: 'inline'
+      script: |
+        # Navigate to the specified path
+        cd /home/sagarkalankar/_work/1
+
+        # List the contents of the directory
+        ls
